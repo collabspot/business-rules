@@ -112,12 +112,19 @@ class NumericType(BaseType):
             return Decimal(value)
         if isinstance(value, Decimal):
             return value
+        if value is None:
+            return value
         else:
             raise AssertionError("{0} is not a valid numeric type.".
                                  format(value))
 
     @type_operator(FIELD_NUMERIC)
     def equal_to(self, other_numeric):
+        if self.value is None:
+            return other_numeric is None
+        if other_numeric is None:
+            return False
+
         return abs(self.value - other_numeric) <= self.EPSILON
 
     @type_operator(FIELD_NUMERIC)
